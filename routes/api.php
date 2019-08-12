@@ -21,7 +21,7 @@ Route::group([
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::post('me', 'Auth\AuthController@me');
-    Route::post('register', 'Auth\RegisterController@create');
+    Route::post('register', 'Auth\RegisterController@register');
 });
 
 Route::apiResource('movies', 'Api\MovieController')->middleware('jwt.auth');
