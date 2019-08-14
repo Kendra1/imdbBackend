@@ -15,7 +15,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return Movie::all();
+        return Movie::all()->load('genre');
     }
 
     /**
@@ -37,7 +37,8 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        //
+        $movie = Movie::find($id)->load('genre');
+        return $movie;
     }
 
     /**
