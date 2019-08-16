@@ -19,9 +19,10 @@ class MovieController extends Controller
         $queryBuilder = Movie::query();
         if($request['searchParam'])
         {
-            $queryBuilder = $queryBuilder->where('title','like','%'.$request['searchParam'].'%');
+            $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
         }
-        return $queryBuilder->paginate(5);
+        return $queryBuilder->paginate(5);  
+
     }
 
     /**
