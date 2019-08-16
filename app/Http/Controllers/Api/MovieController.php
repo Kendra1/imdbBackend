@@ -13,10 +13,19 @@ class MovieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $movies = Movie::with('genre')->paginate(5);
-        return $movies;
+
+        if($request['searchParam']){
+
+            $searchParam = $request['searchParam'];
+            $movies = Movie::where('title', 'LIKE', '%'.$searchParam.'%')->paginate(5);
+            return $movies;
+        }
+        else{
+            $movies = Movie::with('genre')->paginate(5);
+            return $movies;
+        }
     }
 
     /**
