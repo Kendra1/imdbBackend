@@ -13,10 +13,14 @@ class MovieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $movies = Movie::with('genre')->paginate(5);
-        return $movies;
+        $queryBuilder = Movie::query();
+        if($request['searchParam']){
+            $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
+        }
+
+        return $queryBuilder->paginate(5);  
     }
 
     /**
@@ -39,6 +43,7 @@ class MovieController extends Controller
     public function show($id)
     {
         $movie = Movie::find($id)->load('genre');
+
         return $movie;
     }
 
