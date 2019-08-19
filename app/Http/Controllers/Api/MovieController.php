@@ -15,14 +15,12 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        
         $queryBuilder = Movie::query();
-        if($request['searchParam'])
-        {
+        if($request['searchParam']){
             $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
         }
-        return $queryBuilder->paginate(5);  
 
+        return $queryBuilder->paginate(5);  
     }
 
     /**
@@ -45,6 +43,7 @@ class MovieController extends Controller
     public function show($id)
     {
         $movie = Movie::find($id)->load('genre');
+
         return $movie;
     }
 
