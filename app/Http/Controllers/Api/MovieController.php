@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Movie;
+use App\Like;
+use App\Dislike;
+
 
 class MovieController extends Controller
 {
@@ -15,11 +18,19 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $queryBuilder = Movie::query();
+        $user = $request->user();
+        $user_id = $user['id'];
+
+        $queryBuilder = Movie::with(['userLiked' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
+        }])->with(['userDisliked' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
+        }]);
+
         if($request['searchParam']){
             $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
         }
-
+       
         return $queryBuilder->paginate(5);  
     }
 
@@ -40,9 +51,15 @@ class MovieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $movie = Movie::find($id)->load('genre');
+        $user_id = ($request->user())['id'];
+
+        $movie = (Movie::with(['userLiked' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
+        }])->with(['userDisliked' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
+        }]))->find($id)->load('genre');
 
         return $movie;
     }
