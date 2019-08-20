@@ -21,8 +21,4 @@ class Dislike extends Model
     {
         return $this->belongsTo('App\User');
     }
-
-
-
-
 }

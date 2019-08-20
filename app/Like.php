@@ -21,8 +21,4 @@ class Like extends Model
     {
         return $this->belongsTo('App\User');
     }
-
-
-
-
 }

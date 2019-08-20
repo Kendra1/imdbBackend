@@ -16,10 +16,13 @@ class DislikeController extends Controller
         $user_id = $user['id'];
         $movie_id = $request['movie_id'];
 
-        if (!(Dislike::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty()
-        || !(Like::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty()){
+        if (
+            !(Dislike::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty() || 
+            !(Like::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty()
+        )   {
             return "User has already liked or disliked the movie";
-        }
+            }
+            
         $dislike = Dislike::create([
             'user_id' => $user_id,
             'movie_id' => $movie_id
@@ -31,7 +34,7 @@ class DislikeController extends Controller
             $query->where('user_id', $user_id);
         }])->with(['userDisliked' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
-        }]))->find($movie_id);
+        }]))->find($movie_id)->load('genre');
 
         return $movie;
     }
