@@ -27,8 +27,12 @@ class MovieController extends Controller
             $query->where('user_id', $user_id);
         }]);
 
-        if($request['searchParam']){
+        if ($request['searchParam']){
             $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
+        }
+
+        if ($request['genre']){
+            $queryBuilder = $queryBuilder->where('genre_id', $request['genre']);
         }
        
         return $queryBuilder->paginate(5);  
