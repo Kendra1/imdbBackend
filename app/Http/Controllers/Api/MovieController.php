@@ -55,6 +55,8 @@ class MovieController extends Controller
     {
         $user_id = ($request->user())['id'];
 
+        Movie::where('id', $id)->increment('counter', 1);
+
         $movie = (Movie::with(['userLiked' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
         }])->with(['userDisliked' => function($query) use ($user_id){
