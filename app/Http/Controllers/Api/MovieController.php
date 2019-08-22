@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateMovieRequest;
 use App\Movie;
 use App\Like;
 use App\Dislike;
@@ -44,9 +45,16 @@ class MovieController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateMovieRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        return Movie::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'image_url' => $validated['image_url'],
+            'genre_id' => $validated['genre_id']
+        ]);
     }
 
     /**
