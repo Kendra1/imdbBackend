@@ -100,4 +100,11 @@ class MovieController extends Controller
     {
         //
     }
+
+    public function popularMovies()
+    {
+        $movies = Movie::orderBy('likes', 'desc')->take(10)->get();
+
+        return $movies;
+    }
 }
