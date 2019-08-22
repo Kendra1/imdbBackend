@@ -107,4 +107,13 @@ class MovieController extends Controller
 
         return $movies;
     }
+
+    public function relatedMovies(Request $request)
+    {
+        $genre_id = $request->input('genreId');
+        
+        $movies = Movie::where('genre_id', $genre_id)->take(10)->get();
+
+        return $movies;
+    }
 }
