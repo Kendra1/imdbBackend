@@ -32,3 +32,5 @@ Route::post('movies/{movie_id}/like', 'Api\LikeController@likeMovie')->middlewar
 Route::post('movies/{movie_id}/dislike', 'Api\DislikeController@dislikeMovie')->middleware('jwt.auth');
 
 Route::get('genres', 'Api\GenreController@getGenres')->middleware('jwt.auth');
+
+Route::apiResource('comments', 'Api\CommentController')->middleware('jwt.auth');
