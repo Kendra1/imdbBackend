@@ -33,6 +33,8 @@ class LikeController extends Controller
             $query->where('user_id', $user_id);
         }])->with(['userDisliked' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
+        }])->with(['inUsersWatchlist' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
         }]))->find($movie_id)->load('genre');
 
         return $movie;   

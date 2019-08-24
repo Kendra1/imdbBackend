@@ -26,4 +26,9 @@ class Movie extends Model
     {
         return $this->hasMany('App\Dislike');
     }
+
+    public function inUsersWatchlist()
+    {
+        return $this->hasMany('App\Watchlist');
+    }
 }
