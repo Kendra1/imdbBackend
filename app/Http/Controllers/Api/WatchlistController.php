@@ -5,19 +5,22 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CommentRequest;
-use App\Comment;
+use App\Watchlist;
 
-class CommentController extends Controller
+class WatchlistController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user_id = Auth::user()['id'];
+
+        $movies = Watchlist::where('user_id', $user_id)->with('movie')->get();
+
+        return $movies;
     }
 
     /**
@@ -36,18 +39,18 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentRequest $request)
+    public function store(Request $request)
     {
-        $user_name = Auth::user()['name'];
-        $validated = $request->validated();
-        
-        $comment = Comment::create([
-            'commenter'=>$user_name,
-            'comment'=>$validated['comment'],
-            'movie_id'=>$validated['movieId']
+        $user_id = Auth::user()['id'];
+
+        $watchlist = Watchlist::create([
+            'movie_id'=>$request['movieId'],
+            'watched'=>false,
+            'user_id'=>$user_id           
         ]);
 
-        return $comment;
+        return $watchlist;
+
     }
 
     /**
@@ -81,7 +84,11 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $item = Watchlist::find($id);
+
+        $item->fill(['watched' => true])->save();
+
+        return Watchlist::where('id', $id)->with('movie')->get();
     }
 
     /**
@@ -92,6 +99,8 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item = Watchlist::find($id);
+        $item -> delete();
+        return $id;
     }
 }

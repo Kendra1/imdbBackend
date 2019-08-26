@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Movie;
 use App\Like;
@@ -12,8 +13,7 @@ class LikeController extends Controller
 {
     public function likeMovie(Request $request){
 
-        $user = $request->user();
-        $user_id = $user['id'];
+        $user_id = Auth::user()['id'];
         $movie_id = $request['movie_id'];
         if (
             !(Dislike::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty() ||
@@ -23,7 +23,7 @@ class LikeController extends Controller
             }
 
         $like = Like::create([
-            'user_id' => $user['id'],
+            'user_id' => $user_id,
             'movie_id' => $movie_id
         ]);
 
@@ -32,6 +32,8 @@ class LikeController extends Controller
         $movie = (Movie::with(['userLiked' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
         }])->with(['userDisliked' => function($query) use ($user_id){
+            $query->where('user_id', $user_id);
+        }])->with(['inUsersWatchlist' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
         }]))->find($movie_id)->load('genre');
 
