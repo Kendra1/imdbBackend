@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Comment;
@@ -37,11 +38,11 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request)
     {
-        $user = $request->user();
+        $user_name = Auth::user()['name'];
         $validated = $request->validated();
         
         $comment = Comment::create([
-            'commenter'=>$user['name'],
+            'commenter'=>$user_name,
             'comment'=>$validated['comment'],
             'movie_id'=>$validated['movieId']
         ]);

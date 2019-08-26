@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateMovieRequest;
 use App\Movie;
@@ -19,8 +20,7 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
-        $user_id = $user['id'];
+        $user_id = Auth::user()['id'];
 
         $queryBuilder = Movie::with(['userLiked' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
@@ -65,7 +65,7 @@ class MovieController extends Controller
      */
     public function show($id, Request $request)
     {
-        $user_id = ($request->user())['id'];
+        $user_id = Auth::user()['id'];
 
         Movie::where('id', $id)->increment('counter', 1);
 

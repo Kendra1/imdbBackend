@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Watchlist;
 
@@ -15,7 +16,7 @@ class WatchlistController extends Controller
      */
     public function index(Request $request)
     {
-        $user_id = ($request->user())['id'];
+        $user_id = Auth::user()['id'];
 
         $movies = Watchlist::where('user_id', $user_id)->with('movie')->get();
 
@@ -40,7 +41,7 @@ class WatchlistController extends Controller
      */
     public function store(Request $request)
     {
-        $user_id = ($request->user())['id'];
+        $user_id = Auth::user()['id'];
 
         $watchlist = Watchlist::create([
             'movie_id'=>$request['movieId'],

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Movie;
 use App\Like;
@@ -12,8 +13,7 @@ class DislikeController extends Controller
 {
     public function dislikeMovie(Request $request){
 
-        $user = $request->user();
-        $user_id = $user['id'];
+        $user_id = Auth::user()['id'];
         $movie_id = $request['movie_id'];
 
         if (
