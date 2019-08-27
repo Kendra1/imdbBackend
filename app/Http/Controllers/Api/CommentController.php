@@ -15,9 +15,11 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $movie_id = $request->input('movieId');
+
+        return Comment::where('movie_id', $movie_id)->paginate(5);
     }
 
     /**
