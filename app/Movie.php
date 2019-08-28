@@ -16,17 +16,7 @@ class Movie extends Model
     {
         return $this->belongsTo('App\Genre');
     }
-
-    public function userLiked()
-    {
-        return $this->hasMany('App\Like');
-    }
-
-    public function userDisliked()
-    {
-        return $this->hasMany('App\Dislike');
-    }
-
+    
     public function inUsersWatchlist()
     {
         return $this->hasMany('App\Watchlist');
