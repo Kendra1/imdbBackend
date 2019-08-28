@@ -22,11 +22,12 @@ class MovieController extends Controller
     {
         $user_id = Auth::user()['id'];
 
-        $queryBuilder = Movie::with(['userLiked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }])->with(['userDisliked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }]);
+        $queryBuilder = Movie::query();
+        // ::with(['userLiked' => function($query) use ($user_id){
+        //     $query->where('user_id', $user_id);
+        // }])->with(['userDisliked' => function($query) use ($user_id){
+        //     $query->where('user_id', $user_id);
+        // }]);
 
         if ($request['searchParam']){
             $queryBuilder = $queryBuilder->where('title', 'like', '%' . $request['searchParam'] . '%');
@@ -69,12 +70,7 @@ class MovieController extends Controller
 
         Movie::where('id', $id)->increment('counter', 1);
 
-
-        $movie = (Movie::with(['userLiked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }])->with(['userDisliked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }])->with(['inUsersWatchlist' => function($query) use ($user_id){
+        $movie = (Movie::with(['inUsersWatchlist' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
         }]))->find($id)->load('genre');
 

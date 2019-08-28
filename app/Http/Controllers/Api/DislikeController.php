@@ -16,25 +16,21 @@ class DislikeController extends Controller
         $user_id = Auth::user()['id'];
         $movie_id = $request['movie_id'];
 
-        if (
-            !(Dislike::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty() || 
-            !(Like::where('movie_id', $movie_id)->where('user_id', $user_id)->get())->isEmpty()
-        )   {
-            return "User has already liked or disliked the movie";
-            }
+        $dislike = Dislike::where('user_id', $user_id)->where('movie_id', $movie_id);
             
-        $dislike = Dislike::create([
-            'user_id' => $user_id,
-            'movie_id' => $movie_id
-        ]);
+        if(!(($dislike->first()) === null)){
+            $dislike->delete();
+            Movie::where('id', $movie_id)->decrement('dislikes', 1);
+        }
+        else{
+            $dislike = Dislike::create([
+                'user_id' => $user_id,
+                'movie_id' => $movie_id
+            ]);
+            Movie::where('id', $movie_id)->increment('dislikes', 1);
+        }
 
-        Movie::where('id', $movie_id)->increment('dislikes', 1);
-
-        $movie = (Movie::with(['userLiked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }])->with(['userDisliked' => function($query) use ($user_id){
-            $query->where('user_id', $user_id);
-        }])->with(['inUsersWatchlist' => function($query) use ($user_id){
+        $movie = (Movie::with(['inUsersWatchlist' => function($query) use ($user_id){
             $query->where('user_id', $user_id);
         }]))->find($movie_id)->load('genre');
 
